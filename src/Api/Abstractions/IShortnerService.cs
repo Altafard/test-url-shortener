@@ -1,11 +1,13 @@
-﻿namespace Api.Abstractions
+﻿using System.Threading.Tasks;
+
+namespace Api.Abstractions
 {
     public interface IShortenerService
     {
-        string Create(string origin);
+        Task<string> Create(string origin);
 
-        string Obtain(string value);
+        Task<string> Obtain(string value);
 
-        int GetClicks(string value);
+        Task<int> GetClicks(string value);
     }
 }

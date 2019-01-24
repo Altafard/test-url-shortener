@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Api.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,26 +13,26 @@ namespace Api.Controllers
         public UrlController(IShortenerService service) => _service = service ?? throw new ArgumentNullException(nameof(service));
 
         [HttpGet]
-        public IActionResult Get(string shortUrl)
+        public async Task<IActionResult> Get(string shortUrl)
         {
             if (string.IsNullOrEmpty(shortUrl))
             {
                 return BadRequest();
             }
 
-            string longUrl = _service.Obtain(shortUrl);
+            string longUrl = await _service.Obtain(shortUrl);
             return Ok(longUrl);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] string longUrl)
+        public async Task<IActionResult> Post([FromBody] string longUrl)
         {
             if (string.IsNullOrEmpty(longUrl))
             {
                 return BadRequest();
             }
 
-            string shortUrl = _service.Create(longUrl);
+            string shortUrl = await _service.Create(longUrl);
             return Ok(shortUrl);
         }
     }
