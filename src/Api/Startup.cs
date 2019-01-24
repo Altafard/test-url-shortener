@@ -1,4 +1,5 @@
 ﻿using Api.Abstractions;
+using Api.DataAccess;
 using Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +22,7 @@ namespace Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<IShortenerService, ShortenerService>();
+            services.AddTransient<IMongoDbFactory, MongoDbFactory>();
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
