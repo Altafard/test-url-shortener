@@ -4,7 +4,7 @@ namespace Api.Abstractions
 {
     public interface IShortenerService
     {
-        Task<string> Create(string origin);
+        Task<string> Create(string original);
 
         Task<string> Obtain(string value);
 
