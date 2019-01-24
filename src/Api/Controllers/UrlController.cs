@@ -1,20 +1,38 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Api.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController, Route("api/[controller]")]
     public class UrlController : ControllerBase
     {
+        private readonly IShortenerService _service;
+
+        public UrlController(IShortenerService service) => _service = service ?? throw new ArgumentNullException(nameof(service));
+
         [HttpGet]
-        public string Get(string shortUrl)
+        public IActionResult Get(string shortUrl)
         {
-            return "long";
+            if (string.IsNullOrEmpty(shortUrl))
+            {
+                return BadRequest();
+            }
+
+            string longUrl = _service.Obtain(shortUrl);
+            return Ok(longUrl);
         }
 
         [HttpPost]
-        public string Post([FromBody] string longUrl)
+        public IActionResult Post([FromBody] string longUrl)
         {
-            return "short";
+            if (string.IsNullOrEmpty(longUrl))
+            {
+                return BadRequest();
+            }
+
+            string shortUrl = _service.Create(longUrl);
+            return Ok(shortUrl);
         }
     }
 }

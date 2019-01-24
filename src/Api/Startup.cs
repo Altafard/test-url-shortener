@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Api.Abstractions;
+using Api.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,7 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSingleton<IShortenerService, ShortenerService>();
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
