@@ -21,8 +21,8 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddSingleton<IShortenerService, ShortenerService>();
-            services.AddTransient<IMongoDbFactory, MongoDbFactory>();
+            services.AddScoped<IShortenerService, ShortenerService>();
+            services.AddScoped<IMongoDbFactory, MongoDbFactory>();
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
