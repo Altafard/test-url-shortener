@@ -33,7 +33,7 @@ namespace Api.Controllers
             }
 
             string shortUrl = await _service.Create(longUrl);
-            return Ok(shortUrl);
+            return Ok("http://localhost:5000/api/url?shortUrl=" + shortUrl); // TODO : extract a beginning of uri into config
         }
     }
 }

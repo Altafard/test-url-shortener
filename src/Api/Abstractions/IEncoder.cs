@@ -2,8 +2,8 @@
 {
     public interface IEncoder
     {
-        string Encode(long num);
+        string Encode(int num);
 
-        long Decode(string value);
+        int Decode(string value);
     }
 }

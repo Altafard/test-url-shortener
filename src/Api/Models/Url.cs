@@ -5,7 +5,7 @@ namespace Api.Models
 {
     public class Url
     {
-        public Url(string original, long num, IEncoder encoder)
+        public Url(string original, int num, IEncoder encoder)
         {
             ShortUrl = encoder.Encode(num);
             LongUrl = original;

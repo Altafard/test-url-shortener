@@ -25,18 +25,18 @@ namespace Api.Services
 
         public async Task<string> Create(string original)
         {
-            long seq = await IncrementSeq();
+            // TODO : check if url is exists in the collection already
+            int seq = await IncrementSeq();
             var url = new Url(original, seq, _encoder);
             _db.GetCollection<Url>(Urls).InsertOne(url);
             return url.ShortUrl;
         }
 
-        public Task<string> Obtain(string value)
+        public async Task<string> Obtain(string value)
         {
-            return _db.GetCollection<Url>(Urls)
-                .Find(url => url.ShortUrl.Equals(value))
-                .Project(url => url.LongUrl)
-                .SingleAsync();
+            UpdateDefinition<Url> update = Builders<Url>.Update.Inc(url => url.ClicksCount, 1);
+            Url result = await _db.GetCollection<Url>(Urls).FindOneAndUpdateAsync(url => url.ShortUrl.Equals(value), update);
+            return result.LongUrl;
         }
 
         public Task<int> GetClicks(string value)
@@ -47,15 +47,15 @@ namespace Api.Services
                 .SingleAsync();
         }
 
-        private Task<long> IncrementSeq()
+        private Task<int> IncrementSeq()
         {
             FilterDefinition<Counter> filter = Builders<Counter>.Filter.Eq(counter => counter.Key, Urls);
             UpdateDefinition<Counter> update = Builders<Counter>.Update.Inc(counter => counter.Seq, 1);
-            ProjectionDefinition<Counter, long> projection = Builders<Counter>.Projection.Expression(counter => counter.Seq);
+            ProjectionDefinition<Counter, int> projection = Builders<Counter>.Projection.Expression(counter => counter.Seq);
 
             return _db.GetCollection<Counter>(Counters)
                 .FindOneAndUpdateAsync(filter, update,
-                    new FindOneAndUpdateOptions<Counter, long>
+                    new FindOneAndUpdateOptions<Counter, int>
                     {
                         IsUpsert = true,
                         Projection = projection
